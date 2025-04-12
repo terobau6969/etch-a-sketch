@@ -2,13 +2,36 @@ const container = document.getElementById('container');
     const resetButton = document.getElementById('reset');
     let form; // Global form reference
 
-    // Reusable hover effect logic
-    function bindHoverEffect(cell) {
-      cell.addEventListener("mouseover", () => {
-        cell.style.backgroundColor = 'black';
-      });
+    //RandomColor logic whith proigressive darkening effect
+    function getRandomColor() {
+        const r = Math.floor(Math.random() * 256);
+        const g = Math.floor(Math.random() * 256);
+        const b = Math.floor(Math.random() * 256);
+        return `rgb(${r}, ${g}, ${b})`
     }
 
+    // Reusable hover effect logic
+    function bindHoverEffect(cell) {
+        let hoverCount = 0;
+        let baseColor;
+      
+        cell.addEventListener("mouseover", () => {
+          hoverCount++;
+      
+          if (hoverCount === 1) {
+            // First hover = assign random color
+            baseColor = getRandomColor();
+            cell.style.backgroundColor = baseColor;
+            cell.style.opacity = 1;
+          } else {
+            // Progressive darkening
+            const currentOpacity = parseFloat(cell.style.opacity) || 1;
+            if (currentOpacity > 0.1) {
+              cell.style.opacity = currentOpacity - 0.1;
+            }
+          }
+        });
+      }
     // Creates the grid
     function createGrid(gridSize) {
       container.innerHTML = ''; // Clear old grid
